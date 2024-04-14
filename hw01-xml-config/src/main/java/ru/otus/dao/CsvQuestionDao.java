@@ -36,10 +36,9 @@ public class CsvQuestionDao implements QuestionDao {
         return Objects.requireNonNull(inputStream);
     }
 
-    private List<Question> readQuestionsFromCsv(InputStream file) {
-        List<Question> questions;
+    private List<Question> readQuestionsFromCsv(InputStream inputStream) {
 
-        try (InputStreamReader streamReader = new InputStreamReader(file, StandardCharsets.UTF_8);
+        try (InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
              BufferedReader bufferedReader = new BufferedReader(streamReader)) {
 
             CsvToBean<QuestionDto> csvToBean = buildCsvToBean(bufferedReader);
@@ -49,7 +48,7 @@ public class CsvQuestionDao implements QuestionDao {
                 throw new QuestionReadException("No questions were found!", new RuntimeException());
             }
 
-            questions = questionDtos != null ? questionDtos.stream()
+            return questionDtos != null ? questionDtos.stream()
                     .map(QuestionDto::toDomainObject)
                     .collect(Collectors.toList()) : null;
 
@@ -57,7 +56,6 @@ public class CsvQuestionDao implements QuestionDao {
             throw new QuestionReadException("Error while parsing CSV file", e);
         }
 
-        return questions;
     }
 
     private CsvToBean<QuestionDto> buildCsvToBean(BufferedReader bufferedReader) {

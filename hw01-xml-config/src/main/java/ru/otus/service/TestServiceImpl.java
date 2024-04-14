@@ -16,14 +16,13 @@ public class TestServiceImpl implements TestService {
     public void executeTest() {
         ioService.printLine("");
         ioService.printFormattedLine("Please answer the questions below%n");
-        String template = "%d. %s";
         for (Question question : questionDao.findAll()) {
             int counter = 0;
             ioService.printLine(question.text());
 
             for (Answer answer : question.answers()) {
                 counter++;
-                ioService.printFormattedLine(template, counter, answer.text());
+                ioService.printFormattedLine("%d. %s", counter, answer.text());
             }
 
             ioService.printLine("");
